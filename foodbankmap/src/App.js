@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Map from './Components/Map';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const allFoodbanks = "https://www.givefood.org.uk/api/2/foodbanks/"
+
+//get API data 
+export default function App() {
+
+  const [foodbankData, setFoodbankData] = useState([]);
+
+  useEffect(() => {
+     // Get data
+    axios.get(allFoodbanks)
+    .then ((response) => {
+      setFoodbankData(response.data.filter((value, index, array) => {return value.country === 'Scotland';}))
+    })
+  }, [])
+  
+  return <Map data={foodbankData}/>;
+
 }
 
-export default App;
+
+
+
+
+
+
