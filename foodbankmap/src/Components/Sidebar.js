@@ -5,7 +5,6 @@ import React from 'react'
 const Sidebar = () => {
   return (
     <aside className='sidebar'>
-        <button class="closebtn" onclick={openNav}> Close Sidebar</button>
     
         <h1 className='text-center'>Welcome to the <span className="transparent">Scottish</span> Foodbank Map</h1>
 

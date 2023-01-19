@@ -16,6 +16,7 @@ code {
   width: 500px;
   display: block;
   color: rgb(32, 115, 188);
+  background-color: rgba(161, 207, 251, 0.73);
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
 }
 
@@ -32,5 +33,5 @@ code {
 }
 
 .wrapper:hover{
-  background-color: rgb(113, 170, 221);
+  background-color: rgb(71, 125, 172);
 }
