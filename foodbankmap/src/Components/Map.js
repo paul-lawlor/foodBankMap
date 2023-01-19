@@ -6,6 +6,27 @@ const mapStyles = {
   height: "100%",
 };
 
+const mapColours = [
+  {
+    featureType: "water",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#AED1F0",
+      },
+    ],
+  },
+  {
+    featureType: "landscape",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#f2f2f2",
+      },
+    ],
+  },
+];
+
 const splitData = (lat_long) => {
   let splitLL = lat_long.split(",");
   let lat = Number(splitLL[0]);
@@ -39,12 +60,23 @@ export class MapContainer extends Component {
     }
   };
 
+  _mapLoaded(mapProps, map) {
+    map.setOptions({
+      styles: mapColours,
+    });
+  }
+
   render() {
     return (
       <Map
         google={this.props.google}
         zoom={7}
+
+        //removes default UI and sets terrain to ON by default
+        disableDefaultUI="true"
+        mapTypeId={this.props.google.maps.MapTypeId.TERRAIN}
         style={mapStyles}
+        onReady={(mapProps, map) => this._mapLoaded(mapProps, map)}
         initialCenter={{
           lat: 56.8642,
           lng: -4.2518,

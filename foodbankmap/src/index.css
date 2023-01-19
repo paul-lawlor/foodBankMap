@@ -11,3 +11,26 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.sidebar{
+  width: 500px;
+  display: block;
+  color: rgb(32, 115, 188);
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+}
+
+.transparent{
+  opacity: 0.5;
+}
+
+.wrapper{
+  background-color: rgb(174, 209, 240);
+  margin: 10px; /* Creates more space between the wrapper and sidebar */
+  border-radius: 2px; /* Creates rounded corners */
+  margin-bottom: 60px; /* Separates wrappers from one another */
+  font-size: 24px;
+}
+
+.wrapper:hover{
+  background-color: rgb(113, 170, 221);
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Map from './Components/Map';
+import Sidebar from './Components/Sidebar'
 
 const allFoodbanks = "https://www.givefood.org.uk/api/2/foodbanks/"
 
@@ -17,7 +18,12 @@ export default function App() {
     })
   }, [])
   
-  return <Map data={foodbankData}/>;
+  return (
+    <div className='d-flex'>
+      <Sidebar />
+      <Map data={foodbankData}/>
+    </div>
+  );
 
 }
 
