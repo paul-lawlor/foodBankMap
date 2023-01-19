@@ -46,9 +46,8 @@ const getNeedsExcess = (lat_lng, requestType) => {
     "https://www.givefood.org.uk/api/2/foodbanks/search/?lat_lng=" + lat_lng;
   axios.get(API_URL).then((response) => {
     if (requestType === "needs") {
-      return response.data[0].needs.excess === null
-        ? "None"
-        : response.data[0].needs.needs.split("\n");
+      console.log()
+      return response.data[0].needs.needs.split("\n");
     } else if (requestType === "excess") {
       // console.log(response.data[0].needs.excess)
       return response.data[0].needs.excess === null
@@ -101,8 +100,8 @@ export class MapContainer extends Component {
           // Gets map style ⤵
           onReady={(mapProps, map) => this._mapLoaded(mapProps, map)}
           initialCenter={{
-            lat: 56.8642,
-            lng: -4.2518,
+            lat: 56.816922,
+            lng: -4.18265,
           }}
         >
           {/* MAPPING EACH FOODBANK TO AN INDIVIDUAL MARKER ON THE MAP */}
@@ -118,7 +117,6 @@ export class MapContainer extends Component {
               website={foodbank.urls.homepage}
               needs={getNeedsExcess(foodbank.lat_lng, "needs")}
               excess={getNeedsExcess(foodbank.lat_lng, "excess")}
-              id={foodbank.id}
             />
           ))}
 
@@ -143,21 +141,29 @@ export class MapContainer extends Component {
             <Modal.Body>
               <p>{this.state.selectedPlace.address}</p>
               <p>Tel: {this.state.selectedPlace.telephone}</p>
-              <p><a href={this.state.selectedPlace.website}>Website</a></p>
+              <p>
+                <a href={this.state.selectedPlace.website}>Website</a>
+              </p>
 
-            <div className='d-flex m-1'>
-              <div>
-                <ul>Needs</ul>
-                <li>Item 1</li>
-                <li>Item 2</li>
-                <li>Item 3</li> 
-              </div>
-              <div>
-                <ul>Excess</ul>
-                <li>Item 1</li>
-                <li>Item 2</li>
-                <li>Item 3</li> 
-              </div>
+              <div className="d-flex m-1">
+                {/* Needs mapped to list */}
+                <div>
+                  <ul>
+                    needs
+                    <li>Items here</li>
+                  </ul>
+                </div>
+
+                {/* Excess mapped to list*/}
+                <div>
+                  <ul>
+                    Excess
+                    {this.state.selectedPlace.needs?.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                    <li>Items here</li>
+                  </ul>
+                </div>
               </div>
             </Modal.Body>
           </Modal>
