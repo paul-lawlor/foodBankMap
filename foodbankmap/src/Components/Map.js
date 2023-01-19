@@ -44,12 +44,12 @@ const splitData = (lat_long) => {
 const getNeedsExcess = (lat_lng, requestType) => {
   const API_URL =
     "https://www.givefood.org.uk/api/2/foodbanks/search/?lat_lng=" + lat_lng;
+
   axios.get(API_URL).then((response) => {
     if (requestType === "needs") {
-      console.log()
-      return response.data[0].needs.needs.split("\n");
+      const needs = response.data[0].needs.needs.replace(/\r/g, "").split("\n");
+      return needs;
     } else if (requestType === "excess") {
-      // console.log(response.data[0].needs.excess)
       return response.data[0].needs.excess === null
         ? ["N/A"]
         : response.data[0].needs.excess.split("\n");
@@ -130,15 +130,15 @@ export class MapContainer extends Component {
           </InfoWindow> */}
 
           {/* Modal - Mobile */}
-          <Modal
-            show={this.state.showingInfoWindow}
-            onShow={console.log(this.state.selectedPlace)}
-            onHide={this.onClose}
-          >
+          <Modal show={this.state.showingInfoWindow} onHide={this.onClose}>
             <Modal.Header closeButton>
               <Modal.Title>{this.state.selectedPlace.name}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body
+              onClick={() => {
+                console.log(this.state.selectedPlace.needs);
+              }}
+            >
               <p>{this.state.selectedPlace.address}</p>
               <p>Tel: {this.state.selectedPlace.telephone}</p>
               <p>
@@ -149,8 +149,11 @@ export class MapContainer extends Component {
                 {/* Needs mapped to list */}
                 <div>
                   <ul>
-                    needs
-                    <li>Items here</li>
+                    Needs
+                    <li>{JSON.stringify(this.state.selectedPlace.needs)}</li>
+                    {/* {this.state.selectedPlace.needs?.map((item) => (
+                      <li>{item}</li>
+                    ))} */}
                   </ul>
                 </div>
 
@@ -158,9 +161,6 @@ export class MapContainer extends Component {
                 <div>
                   <ul>
                     Excess
-                    {this.state.selectedPlace.needs?.map((item) => (
-                      <li>{item}</li>
-                    ))}
                     <li>Items here</li>
                   </ul>
                 </div>
