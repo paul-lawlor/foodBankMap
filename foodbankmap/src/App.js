@@ -19,20 +19,10 @@ export default function App() {
     axios.get(allFoodbanks).then((response) => {
       setFoodbankData(
         response.data.filter((value, index, array) => {
-
-          if (dataFilter.glasgow === true) {
-            if (dataFilter.edin === true) {
-              // gla and edin
-            } else {
-              // just gla
-            }
-          } else if (dataFilter.edin === true) {
-            // just edin
-          }
-
-
-          return value.politics.district === "Glasgow City";
-          //return value.country === "Scotland";
+          // CHECK FILTERS HERE TO SEE WHAT TO SHOW
+          // i.e.  return value.politics.district === "Glasgow City";
+          
+          return value.country === "Scotland";
         })
       );
     });
