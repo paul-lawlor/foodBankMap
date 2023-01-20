@@ -1,15 +1,15 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Modal";
 import axios from "axios";
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react";
 
 const mapStyles = {
-  width: "100%",
+  width: "50%",
   height: "100%",
 };
 
-//defining the colouring for the map in an object
+// Map Colours object defines colours of Google Map
 const mapColours = [
   {
     featureType: "water",
@@ -31,6 +31,7 @@ const mapColours = [
   },
 ];
 
+// Split Data splits lattitude and longitude
 const splitData = (lat_long) => {
   let splitLL = lat_long.split(",");
   let lat = Number(splitLL[0]);
@@ -39,22 +40,6 @@ const splitData = (lat_long) => {
     lat: lat,
     lng: long,
   };
-};
-
-const getNeedsExcess = (lat_lng, requestType) => {
-  const API_URL =
-    "https://www.givefood.org.uk/api/2/foodbanks/search/?lat_lng=" + lat_lng;
-
-  axios.get(API_URL).then((response) => {
-    if (requestType === "needs") {
-      const needs = response.data[0].needs.needs.replace(/\r/g, "").split("\n");
-      return needs;
-    } else if (requestType === "excess") {
-      return response.data[0].needs.excess === null
-        ? ["N/A"]
-        : response.data[0].needs.excess.split("\n");
-    }
-  });
 };
 
 export class MapContainer extends Component {
@@ -80,6 +65,7 @@ export class MapContainer extends Component {
     }
   };
 
+  // Set map colours
   _mapLoaded(mapProps, map) {
     map.setOptions({
       styles: mapColours,
@@ -89,22 +75,26 @@ export class MapContainer extends Component {
   render() {
     return (
       <>
-        {/* MAP COMPONENT */}
+        {/* Google Map Component */}
         <Map
           google={this.props.google}
-          zoom={7}
-          //removes default UI and sets terrain to ON by default
-          disableDefaultUI="true"
+          zoom={6.3}
+          minZoom={6.3}
+          initialCenter={{
+            lat: 56.659406,
+            lng: -4.011214,
+          }}
           mapTypeId={this.props.google.maps.MapTypeId.TERRAIN}
           style={mapStyles}
-          // Gets map style ⤵
+
+          //removes default UI and sets terrain to ON by default
+          disableDefaultUI="true"
+
+          // Get map colours
           onReady={(mapProps, map) => this._mapLoaded(mapProps, map)}
-          initialCenter={{
-            lat: 56.816922,
-            lng: -4.18265,
-          }}
         >
-          {/* MAPPING EACH FOODBANK TO AN INDIVIDUAL MARKER ON THE MAP */}
+          
+          {/* Map each foodbank location to a marker on the map */}
           {this.props.data.map((foodbank) => (
             <Marker
               onClick={this.onMarkerClick}
@@ -115,57 +105,65 @@ export class MapContainer extends Component {
               telephone={foodbank.phone}
               email={foodbank.email}
               website={foodbank.urls.homepage}
-              needs={getNeedsExcess(foodbank.lat_lng, "needs")}
-              excess={getNeedsExcess(foodbank.lat_lng, "excess")}
             />
           ))}
 
-          {/* Info Window - Desktop*/}
-          {/* <InfoWindow
+          {/* Info Window - Desktop
+          <InfoWindow
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
             onClose={this.onClose}
           >
             <h1>{this.state.selectedPlace.name}</h1>
-          </InfoWindow> */}
+          </InfoWindow> 
+          */}
 
           {/* Modal - Mobile */}
           <Modal show={this.state.showingInfoWindow} onHide={this.onClose}>
+
             <Modal.Header closeButton>
-              <Modal.Title>{this.state.selectedPlace.name}</Modal.Title>
+              <Modal.Title className="fs-2">{this.state.selectedPlace.name}</Modal.Title>
             </Modal.Header>
-            <Modal.Body
-              onClick={() => {
-                console.log(this.state.selectedPlace.needs);
-              }}
-            >
-              <p>{this.state.selectedPlace.address}</p>
-              <p>Tel: {this.state.selectedPlace.telephone}</p>
-              <p>
-                <a href={this.state.selectedPlace.website}>Website</a>
+
+            <Modal.Body>
+
+            {/* Information */}
+            <div style={{"border-bottom":"solid #dddddd 1px","margin-left":"-16px","padding-left":"16px","margin-right":"-16px","padding-right":"16px"}} className="mb-3">
+              <p style={{"font-weight":"600"}}>{this.state.selectedPlace.address}</p>
+
+              <p className="mb-0 d-flex">
+                <p style={{"font-weight":"500"}} className="m-0 me-1">Tel:</p>{this.state.selectedPlace.telephone}
               </p>
 
-              <div className="d-flex m-1">
-                {/* Needs mapped to list */}
-                <div>
-                  <ul>
-                    Needs
-                    <li>{JSON.stringify(this.state.selectedPlace.needs)}</li>
-                    {/* {this.state.selectedPlace.needs?.map((item) => (
-                      <li>{item}</li>
-                    ))} */}
-                  </ul>
-                </div>
+              <p className="d-flex">
+                <p style={{"font-weight":"500"}} className="m-0 me-1">Email:</p>{this.state.selectedPlace.email}
+              </p>
+            </div>
 
-                {/* Excess mapped to list*/}
-                <div>
-                  <ul>
-                    Excess
-                    <li>Items here</li>
-                  </ul>
-                </div>
+            {/* Needs & Excess */}
+            <div className="d-flex m-1 justify-content-evenly ">
+
+              <div>
+                <h5 className="mb-2">Needs</h5>
+                <p className="mb-0"><i className="bi-check-circle text-success me-1"></i> Need 1</p>
+                <p className="mb-0"><i className="bi-check-circle text-success me-1"></i> Need 2</p>
+                <p className="mb-0"><i className="bi-check-circle text-success me-1"></i> Need 3</p>
               </div>
+
+              <div>
+                <h5 className="mb-2">Excess</h5>
+                <p className="mb-0"><i className="bi-x-circle text-danger me-1"></i> Excess 1</p>
+                <p className="mb-0"><i className="bi-x-circle text-danger me-1"></i> Excess 2</p>
+                <p className="mb-0"><i className="bi-x-circle text-danger me-1"></i> Excess 3</p>
+              </div>
+
+            </div>
             </Modal.Body>
+
+            <Modal.Footer>
+              <a href={this.state.selectedPlace.website} className="btn btn-primary">Visit Website</a>
+            </Modal.Footer>
+
           </Modal>
         </Map>
       </>

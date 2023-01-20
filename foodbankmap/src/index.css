@@ -13,7 +13,7 @@ code {
 }
 
 .sidebar{
-  width: 500px;
+  width: 50%;
   display: block;
   color: rgb(32, 115, 188);
   background-color: rgba(161, 207, 251, 0.73);
