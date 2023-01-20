@@ -4,11 +4,6 @@ import Button from "react-bootstrap/Modal";
 import axios from "axios";
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react";
 
-const mapStyles = {
-  width: "50%",
-  height: "100%",
-};
-
 // Map Colours object defines colours of Google Map
 const mapColours = [
   {
@@ -41,6 +36,17 @@ const splitData = (lat_long) => {
     lng: long,
   };
 };
+
+// // Get needs - BUGGED
+// const getNeeds = async (lat_long) => {
+//   const API_URL = "https://www.givefood.org.uk/api/2/foodbanks/search/?lat_lng=" + lat_long;
+//   const x = await axios.get(API_URL)
+//   .then((response) => {
+//     return response.data[0].needs.needs.replace(/\r/g, "").split("\n");
+
+//   });
+//   return x
+// }
 
 export class MapContainer extends Component {
   state = {
@@ -85,7 +91,7 @@ export class MapContainer extends Component {
             lng: -4.011214,
           }}
           mapTypeId={this.props.google.maps.MapTypeId.TERRAIN}
-          style={mapStyles}
+          className="w-75"
 
           //removes default UI and sets terrain to ON by default
           disableDefaultUI="true"
@@ -93,7 +99,7 @@ export class MapContainer extends Component {
           // Get map colours
           onReady={(mapProps, map) => this._mapLoaded(mapProps, map)}
         >
-          
+
           {/* Map each foodbank location to a marker on the map */}
           {this.props.data.map((foodbank) => (
             <Marker
@@ -105,6 +111,7 @@ export class MapContainer extends Component {
               telephone={foodbank.phone}
               email={foodbank.email}
               website={foodbank.urls.homepage}
+              // needs={getNeeds(foodbank.lat_lng)} // BUGGED
             />
           ))}
 
@@ -141,17 +148,17 @@ export class MapContainer extends Component {
             </div>
 
             {/* Needs & Excess */}
-            <div className="d-flex m-1 justify-content-evenly ">
+            <div className="d-flex m-1 justify-content-evenly">
 
               <div>
-                <h5 className="mb-2">Needs</h5>
+                <h5 className="mb-2">Requests</h5>
                 <p className="mb-0"><i className="bi-check-circle text-success me-1"></i> Need 1</p>
                 <p className="mb-0"><i className="bi-check-circle text-success me-1"></i> Need 2</p>
                 <p className="mb-0"><i className="bi-check-circle text-success me-1"></i> Need 3</p>
               </div>
 
               <div>
-                <h5 className="mb-2">Excess</h5>
+                <h5 className="mb-2">No Thanks</h5>
                 <p className="mb-0"><i className="bi-x-circle text-danger me-1"></i> Excess 1</p>
                 <p className="mb-0"><i className="bi-x-circle text-danger me-1"></i> Excess 2</p>
                 <p className="mb-0"><i className="bi-x-circle text-danger me-1"></i> Excess 3</p>

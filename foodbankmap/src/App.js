@@ -9,20 +9,38 @@ const allFoodbanks = "https://www.givefood.org.uk/api/2/foodbanks/";
 export default function App() {
   const [foodbankData, setFoodbankData] = useState([]);
 
+  // FILTERS STATE
+  const [dataFilter, setDataFilter] = useState({
+    glasgow: true
+  });
+
   useEffect(() => {
     // Get data
     axios.get(allFoodbanks).then((response) => {
       setFoodbankData(
         response.data.filter((value, index, array) => {
-          return value.country === "Scotland";
+
+          if (dataFilter.glasgow === true) {
+            if (dataFilter.edin === true) {
+              // gla and edin
+            } else {
+              // just gla
+            }
+          } else if (dataFilter.edin === true) {
+            // just edin
+          }
+
+
+          return value.politics.district === "Glasgow City";
+          //return value.country === "Scotland";
         })
       );
     });
   }, []);
 
   return (
-    <div className="d-flex flex-md-row flex-sm-column">
-      <Sidebar />
+    <div className="d-flex flex-md-row flex-column">
+      <Sidebar filteredSetter={setDataFilter} />
       <Map data={foodbankData} />
     </div>
   );
