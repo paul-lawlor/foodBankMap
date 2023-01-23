@@ -37,17 +37,6 @@ const splitData = (lat_long) => {
   };
 };
 
-// // Get needs - BUGGED
-// const getNeeds = async (lat_long) => {
-//   const API_URL = "https://www.givefood.org.uk/api/2/foodbanks/search/?lat_lng=" + lat_long;
-//   const x = await axios.get(API_URL)
-//   .then((response) => {
-//     return response.data[0].needs.needs.replace(/\r/g, "").split("\n");
-
-//   });
-//   return x
-// }
-
 export class MapContainer extends Component {
   state = {
     showingInfoWindow: false,
@@ -111,7 +100,8 @@ export class MapContainer extends Component {
               telephone={foodbank.phone}
               email={foodbank.email}
               website={foodbank.urls.homepage}
-              // needs={getNeeds(foodbank.lat_lng)} // BUGGED
+              needs={foodbank.needs}
+              excess={foodbank.excess}
             />
           ))}
 
@@ -126,7 +116,9 @@ export class MapContainer extends Component {
           */}
 
           {/* Modal - Mobile */}
-          <Modal show={this.state.showingInfoWindow} onHide={this.onClose}>
+          <Modal show={this.state.showingInfoWindow} onHide={this.onClose} onShow={() => {
+            console.log(this.state.selectedPlace.needs)
+          }}>
 
             <Modal.Header closeButton>
               <Modal.Title className="fs-2">{this.state.selectedPlace.name}</Modal.Title>
@@ -152,16 +144,16 @@ export class MapContainer extends Component {
 
               <div>
                 <h5 className="mb-2">Requests</h5>
-                <p className="mb-0"><i className="bi-check-circle text-success me-1"></i> Need 1</p>
-                <p className="mb-0"><i className="bi-check-circle text-success me-1"></i> Need 2</p>
-                <p className="mb-0"><i className="bi-check-circle text-success me-1"></i> Need 3</p>
+                {this.state.selectedPlace.needs?.map((item) => (
+                  <p className="mb-0"><i className="bi-check-circle text-success me-1"></i>{item}</p>
+                ))}
               </div>
 
               <div>
-                <h5 className="mb-2">No Thanks</h5>
-                <p className="mb-0"><i className="bi-x-circle text-danger me-1"></i> Excess 1</p>
-                <p className="mb-0"><i className="bi-x-circle text-danger me-1"></i> Excess 2</p>
-                <p className="mb-0"><i className="bi-x-circle text-danger me-1"></i> Excess 3</p>
+                <h5 className="mb-2">Excess</h5>
+                {this.state.selectedPlace.excess?.map((item) => (
+                  <p className="mb-0"><i className="bi-x-circle text-danger me-1"></i>{item}</p>
+                ))}
               </div>
 
             </div>
