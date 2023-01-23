@@ -9,13 +9,6 @@ const GET_NEEDS_API_URL = "https://www.givefood.org.uk/api/2/foodbanks/search/?l
 //get API data
 export default function App() {
   const [foodbankData, setFoodbankData] = useState([]);
-
-  // FILTERS STATE
-
-  /* Array Key
-  0 - Glasgow
-  1 - Edinburgh
-  */
   const [dataFilter, setDataFilter] = useState('')
 
   useEffect(() => {
@@ -24,6 +17,7 @@ export default function App() {
     axios.get(ALL_FOODBANKS_API_URL).then((response) => {
 
       // Filter Data
+      // If no filter selected, display all
       let filteredData = response.data.filter((value, index, array) => {
         return (dataFilter) ? value.politics.district === dataFilter : value.country === "Scotland";
       });
