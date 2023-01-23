@@ -1,8 +1,6 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Modal";
-import axios from "axios";
-import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react";
+import { Map, GoogleApiWrapper, Marker} from "google-maps-react";
 
 // Map Colours object defines colours of Google Map
 const mapColours = [
@@ -105,17 +103,7 @@ export class MapContainer extends Component {
             />
           ))}
 
-          {/* Info Window - Desktop
-          <InfoWindow
-            marker={this.state.activeMarker}
-            visible={this.state.showingInfoWindow}
-            onClose={this.onClose}
-          >
-            <h1>{this.state.selectedPlace.name}</h1>
-          </InfoWindow> 
-          */}
-
-          {/* Modal - Mobile */}
+          {/* Modal Pop-up */}
           <Modal show={this.state.showingInfoWindow} onHide={this.onClose} onShow={() => {
             console.log(this.state.selectedPlace.needs)
           }}>
@@ -142,14 +130,14 @@ export class MapContainer extends Component {
             {/* Needs & Excess */}
             <div className="d-flex m-1 justify-content-evenly">
 
-              <div>
+              <div className="w-50 mx-2">
                 <h5 className="mb-2">Requests</h5>
                 {this.state.selectedPlace.needs?.map((item) => (
                   <p className="mb-0"><i className="bi-check-circle text-success me-1"></i>{item}</p>
                 ))}
               </div>
 
-              <div>
+              <div className="w-50 mx-2">
                 <h5 className="mb-2">Excess</h5>
                 {this.state.selectedPlace.excess?.map((item) => (
                   <p className="mb-0"><i className="bi-x-circle text-danger me-1"></i>{item}</p>

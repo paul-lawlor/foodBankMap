@@ -31,6 +31,7 @@ export default function App() {
       // Get Needs & Excess
       let promises = filteredData.map((foodBank) => {
         return axios.get(GET_NEEDS_API_URL + foodBank.lat_lng).then((response) => {
+          // If the value is 'Unknown, or blank, change it to None
           foodBank.needs = (response.data[0].needs.needs === 'Unknown') ? ['None'] : response.data[0].needs.needs.replace(/\r/g, "").split("\n");
           foodBank.excess = (response.data[0].needs.excess === "") ? ['None'] : response.data[0].needs.excess?.replace(/\r/g,"")?.split('\n') || ['None'];
         });
