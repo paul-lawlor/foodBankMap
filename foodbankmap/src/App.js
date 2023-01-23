@@ -11,19 +11,21 @@ export default function App() {
   const [foodbankData, setFoodbankData] = useState([]);
 
   // FILTERS STATE
-  const [dataFilter, setDataFilter] = useState({
-    glasgow: true
-  });
+
+  /* Array Key
+  0 - Glasgow
+  1 - Edinburgh
+  */
+  const [dataFilter, setDataFilter] = useState('')
 
   useEffect(() => {
+    console.log("USE EFFECT")
     // Get data
     axios.get(ALL_FOODBANKS_API_URL).then((response) => {
 
-      // Filter Data to Scotland Only
+      // Filter Data
       let filteredData = response.data.filter((value, index, array) => {
-        // CHECK FILTERS HERE TO SEE WHAT TO SHOW
-        // i.e. return value.politics.district === "Glasgow City";
-        return value.country === "Scotland";
+        return (dataFilter) ? value.politics.district === dataFilter : value.country === "Scotland";
       });
 
       // Get Needs & Excess
@@ -39,11 +41,11 @@ export default function App() {
         setFoodbankData(filteredData);
       });
     });
-  }, []);
+  }, [dataFilter]);
 
   return (
     <div className="d-flex">
-      <Sidebar filteredSetter={setDataFilter} />
+      <Sidebar setDataFilter={setDataFilter} />
       <Map data={foodbankData} />
     </div>
   );
